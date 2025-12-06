@@ -1,0 +1,3 @@
+/home/tom/test/25110621/CMakeFiles/learn_cmake.dir
+/home/tom/test/25110621/CMakeFiles/edit_cache.dir
+/home/tom/test/25110621/CMakeFiles/rebuild_cache.dir
