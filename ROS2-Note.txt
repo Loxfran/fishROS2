@@ -1,0 +1,36 @@
+1、设置日志格式
+export RCUTILS_CONSOLE_OUTPUT_FORMAT=[{function_name}:{line_number}]:{message}
+
+2、CMakeLists 重点知识
+
+# 第一步 查找依赖项，创建功能包时若命令中--dependences 有则会自动添加
+find_package(ament_cmake REQUIRED)
+find_package(chapt4_interfaces REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(turtlesim REQUIRED)
+
+# 第二步 创建可执行文件
+add_executable(turtle_control src/turtle_control.cpp)
+add_executable(patrol_client src/patrol_client.cpp)
+
+# 第三步 配置依赖，此步骤每一个可执行目标需要独立配置
+ament_target_dependencies(
+  turtle_control
+  rclcpp
+  chapt4_interfaces
+  geometry_msgs
+  turtlesim
+)
+ament_target_dependencies(
+  patrol_client
+  rclcpp
+  chapt4_interfaces
+)
+
+# 第四步 将编译后的可执行文件放到指定路径
+install(TARGETS
+  turtle_control
+  patrol_client
+  DESTINATION lib/${PROJECT_NAME}
+)

@@ -1,0 +1,57 @@
+// 配置Git用户和邮箱
+git config --global user.name "YourName"
+git config --global user.email "yourmail@example.com"
+
+// 配置默认分支
+git config --global init.defaultBranch master
+
+// 查看Git配置
+git config -l
+
+// 初始化仓库
+git init
+
+// 提交代码
+git add filePath	# 将文件添加到缓存区
+git add folder		# 将文件夹添加到缓存区
+git add .			# 将当前目录所有文件添加到缓存区
+
+git reset			# 清空缓存区
+
+git commit -m "添加描述"		# 提交
+
+git log				# 查看提交日志
+
+// 在工作区中添加忽略文件
+在工作区根目录下创建.gitignore文件
+编辑.gitignore文件并通过下面代码提交
+git add .gitignore
+git commit -m "添加忽略文件"
+
+// 推送代码
+git push -u origin main
+#若提示 源引用规格 main 没有匹配
+git branch -m master main
+
+
+
+//命令行创建github远程仓库
+gh repo create test \
+  --description "跟着小鱼学ROS2" \
+  --public  
+ # 公开仓库（私有仓库用 --private）
+
+// 加速github
+sudo sh -c 'sed -i "/# GitHub520 Host Start/Q" /etc/hosts && curl https://raw.hellogithub.com/hosts >> /etc/hosts'
+// FastGithub
+1、下载并部署工具，终端依次执行命令：
+wget -c https://github.com/dotnetcore/FastGithub/releases/download/2.1.4/fastgithub_linux-x64.zip
+unzip fastgithub_linux-x64.zip
+sudo mv fastgithub_linux-x64 /opt
+cd /opt/fastgithub_linux-x64
+sudo ./fastgithub start
+2、配置系统代理：打开 Ubuntu 设置→网络→网络代理，选择自动并填入http://127.0.0.1:38457，保存后生效。
+3、处理证书问题：若浏览器提示安全问题，将证书导入系统即可，命令如下：
+sudo cp cacert/fastgithub.cer /usr/local/share/ca-certificates/fastgithub.crt
+sudo update-ca-certificates
+
