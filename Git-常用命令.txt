@@ -27,12 +27,12 @@ git log				# 查看提交日志
 编辑.gitignore文件并通过下面代码提交
 git add .gitignore
 git commit -m "添加忽略文件"
+git push		#推送代码
 
-// 推送代码
+// 推送代码 首次
 git push -u origin main
 #若提示 源引用规格 main 没有匹配
 git branch -m master main
-
 
 
 //命令行创建github远程仓库
