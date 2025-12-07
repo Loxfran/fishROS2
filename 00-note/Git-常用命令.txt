@@ -34,6 +34,11 @@ git push -u origin main
 #若提示 源引用规格 main 没有匹配
 git branch -m master main
 
+// 更换原文件路经
+git mv 原路经/文件名 目标路径/文件名
+git add 目标路径/文件名
+git commit
+git push
 
 //命令行创建github远程仓库
 gh repo create test \
