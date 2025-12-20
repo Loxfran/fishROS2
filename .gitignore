@@ -1,0 +1,11 @@
+cat > .gitignore << EOF
+/*
+*/
+
+!/src/
+!src/**
+
+!/00-note/
+!00-note/**
+
+!.gitignore
