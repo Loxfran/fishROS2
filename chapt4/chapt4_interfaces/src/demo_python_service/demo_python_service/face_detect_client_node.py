@@ -10,7 +10,7 @@ from cv_bridge import CvBridge
 from rcl_interfaces.srv import SetParameters
 from rcl_interfaces.msg import Parameter, ParameterValue, ParameterType
 
-
+print(cv2.cuda.getCudaEnabledDeviceCount())
 
 class FaceDetectionClient(Node):
     def __init__(self):
@@ -30,7 +30,7 @@ class FaceDetectionClient(Node):
         response = future.result()
         self.get_logger().info(f'Number of faces detected: {response.number}, Time taken: {response.use_time:.4f} seconds')
         # 注释防止显示堵塞多次请求
-        # self.show_faces(response)
+        self.show_faces(response)
 
     def call_set_parameters(self, parameters):
         # 创建客户端，等待服务上线
