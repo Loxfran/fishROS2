@@ -3,7 +3,11 @@
 #include "turtlesim/msg/pose.hpp"
 #include "rclcpp/rclcpp.hpp"
 
+#include "rcl_interfaces/msg/set_parameters_result.hpp"
+
+
 using Patrol = chapt4_interfaces::srv::Patrol;
+using SetParametersResult = rcl_interfaces::msg::SetParametersResult;
 
 class TurtleController : public rclcpp::Node {
 private:
@@ -14,9 +18,33 @@ private:
     double max_speed_{3.0};
     float target_x_ = 6.0f;
     float target_y_ = 6.0f;
+    OnSetParametersCallbackHandle::SharedPtr parameters_callback_handle_;
 
 public:
     TurtleController() : rclcpp::Node("turtle_controler") {
+        // 声明参数并获取参数值
+        this->declare_parameter<double>("k", 1.0);
+        this->declare_parameter<double>("max_speed", 1.0);
+        k_ = this->get_parameter("k").as_double();
+        max_speed_ = this->get_parameter("max_speed").as_double();  
+        // 设置参数回调函数
+        parameters_callback_handle_ = this->add_on_set_parameters_callback(
+            [&](const std::vector<rclcpp::Parameter> & params) -> SetParametersResult {
+                for (auto param:params){
+                    if (param.get_name() == "k"){
+                        k_ = param.as_double();
+                        RCLCPP_INFO(this->get_logger(), "更新参数k: %.2f", k_);
+                    } else if (param.get_name() == "max_speed"){
+                        max_speed_ = param.as_double();
+                        RCLCPP_INFO(this->get_logger(), "更新参数max_speed: %.2f", max_speed_);
+                    }
+                }
+                auto result = SetParametersResult();
+                result.successful = true;
+                result.reason = "参数更新成功";
+                return result;
+            }
+        );
         // 创建巡逻服务
         patrol_server_ = this->create_service<Patrol>(
             "patrol",
@@ -53,6 +81,8 @@ private:
         auto angle_to_target = std::atan2(target_y_ - current_y, target_x_ - current_x);
         auto angle_diff = angle_to_target - pose->theta;
         RCLCPP_INFO(this->get_logger(), "角度差:%.2f", angle_diff);
+        RCLCPP_INFO(this->get_logger(), "k:%.2f", k_);
+        RCLCPP_INFO(this->get_logger(), "max_speed:%.2f", max_speed_);
         //4、计算线速度和角速度
         if (distance > 0.1){   
             if (fabs(angle_diff) > 0.1) {
