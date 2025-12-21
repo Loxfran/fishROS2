@@ -7,6 +7,10 @@ import cv2
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 
+from rcl_interfaces.srv import SetParameters
+from rcl_interfaces.msg import Parameter, ParameterValue, ParameterType
+
+
 
 class FaceDetectionClient(Node):
     def __init__(self):
@@ -25,7 +29,36 @@ class FaceDetectionClient(Node):
         rclpy.spin_until_future_complete(self, future)
         response = future.result()
         self.get_logger().info(f'Number of faces detected: {response.number}, Time taken: {response.use_time:.4f} seconds')
-        self.show_faces(response)
+        # 注释防止显示堵塞多次请求
+        # self.show_faces(response)
+
+    def call_set_parameters(self, parameters):
+        # 创建客户端，等待服务上线
+        client = self.create_client(SetParameters, '/face_detection_node/set_parameters')
+        while not client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info('Waiting for set_parameters service...')
+        # 创建请求参数对象
+        request = SetParameters.Request()
+        request.parameters = parameters
+        # 异步调用服务,等待结果 
+        future = client.call_async(request)
+        rclpy.spin_until_future_complete(self, future)
+        response = future.result()
+        return response
+
+    def update_detect_model(self, model):
+        # 创建参数对象
+        param = Parameter()
+        param.name = 'model'
+        param.value.type = ParameterType.PARAMETER_STRING
+        param.value.string_value = model
+        # 调用服务设置参数
+        response = self.call_set_parameters([param])
+        for result in response.results:
+            if result.successful:
+                self.get_logger().info(f'Parameter {param.name} set to {model} successfully')
+            else:
+                self.get_logger().error(f'Failed to set parameter {result.reason}')
 
     def show_faces(self, response):
         for i in range(response.number):
@@ -42,6 +75,10 @@ class FaceDetectionClient(Node):
 def main():
     rclpy.init()
     node = FaceDetectionClient()
+    node.update_detect_model('cnn')  # 更新检测模型为 'cnn'
     node.send_request()
+    node.update_detect_model('hog')  # 更新检测模型为 'hog'
+    node.send_request()
+    rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()
