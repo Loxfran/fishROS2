@@ -1,11 +1,29 @@
 cat > .gitignore << EOF
-/*
-*/
+!chapt0/
+!chapt0/**
+!chapt1/
+!chapt1/**
 
-!/src/
-!src/**
+!chapt*/*/src/
+!chapt*/*/src/**
+!chapt*/src/
+!chapt*/src/**
 
 !/00-note/
 !00-note/**
 
 !.gitignore
+
+chapt*/**/.marscode/
+chapt*/**/.vscode/
+chapt*/**/build/
+chapt*/**/install/
+chapt*/**/log/
+
+chapt*/.marscode/
+chapt*/.vscode/
+chapt*/build/
+chapt*/install/
+chapt*/log/
+
+.marscode/
