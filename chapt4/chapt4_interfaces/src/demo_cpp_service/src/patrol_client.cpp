@@ -103,7 +103,7 @@ int main(int argc, char **argv) {
     rclcpp::init(argc, argv);
     auto client_node = std::make_shared<PatrolClient>();
     //4.更新参数k
-    client_node->update_server_param_k(0.5);
+    // client_node->update_server_param_k(0.5);
     rclcpp::spin(client_node);
     rclcpp::shutdown();
     return 0;
