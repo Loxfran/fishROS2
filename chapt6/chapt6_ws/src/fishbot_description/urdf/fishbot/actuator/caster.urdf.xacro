@@ -1,44 +1,41 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
     <xacro:include filename="$(find fishbot_description)/urdf/fishbot/common_intertia.urdf.xacro"/>
-    <xacro:macro name="imu_xacro" params="xyz">
+    <xacro:macro name="caster_xacro" params="caster_name xyz">
         <!-- 机器人的惯性测量单元 -->
-        <link name="imu_link">
+        <link name="${caster_name}_link">
             <!-- 部件的外观描述 -->
             <visual>
-                <!-- 沿着自身几何中心的偏移量和旋转量 -->
-                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
-                <!-- 几何形状 -->
+                <origin xyz="0.0 0.0 0.0" rpy="1.57079 0.0 0.0"/>
                 <geometry>
-                    <box size="0.02 0.02 0.02"/>
+                    <sphere radius="0.016"/>
                 </geometry>
                 <!-- 材质 颜色 -->
-                <material name="black">
-                    <color rgba="0.0 0.0 0.0 0.5"/>
+                <material name="yellow">
+                    <color rgba="1.0 1.0 0.0 1.0"/>
                 </material>
             </visual>
             <collision>
-                <!-- 沿着自身几何中心的偏移量和旋转量 -->
-                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
-                <!-- 几何形状 -->
+                <origin xyz="0.0 0.0 0.0" rpy="1.57079 0.0 0.0"/>
                 <geometry>
-                    <box size="0.02 0.02 0.02"/>
+                    <sphere radius="0.016"/>
                 </geometry>
                 <!-- 材质 颜色 -->
-                <material name="black">
-                    <color rgba="0.0 0.0 0.0 0.5"/>
+                <material name="yellow">
+                    <color rgba="1.0 1.0 0.0 1.0"/>
                 </material>
             </collision>
-            <xacro:box_intertia m="0.2" w="0.02" h="0.02" d="0.02"/>
+            <xacro:sphere_intertia m="0.2" r="0.016"/>
         </link>
         <!-- 机器人的关节 用于组合机器人的部件-->
-        <joint name="imu_joint" type="fixed">
+        <joint name="${caster_name}_joint" type="fixed">
             <!-- 关节的父部件 -->
             <parent link="base_link"/>
             <!-- 关节的子部件 -->
-            <child link="imu_link"/>
+            <child link="${caster_name}_link"/>
             <!-- 关节的位置和旋转 -->
             <origin xyz="${xyz}" rpy="0.0 0.0 0.0"/>
+            <axis xyz="0 1 0"/>
         </joint>
     </xacro:macro>
 </robot>
